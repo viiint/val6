@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6 месяцев вместе ❤️ Наша история</title>
+    <!-- Подключаем Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключаем красивые романтичные шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600&family=Marck+Script&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FFFDFB',
+                        softpink: '#FFF0F3',
+                        crimson: '#B91C1C',
+                        deepred: '#881337',
+                        roseaccent: '#E11D48',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                        handwriting: ['"Marck Script"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Базовые стили и кастомные анимации */
+        body {
+            background-color: #FFFDFB;
+            color: #4A0E17;
+            overflow-x: hidden;
+        }
+
+        /* Анимация пульсации сердечка на конверте */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.18); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.12); }
+            60% { transform: scale(1); }
+        }
+        .animate-heartbeat {
+            animation: heartbeat 2s infinite ease-in-out;
+        }
+
+        /* Анимация парящих сердечек на фоне */
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.45;
+            }
+            85% {
+                opacity: 0.35;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+        .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+            animation: floatUp linear infinite;
+        }
+
+        /* Классы для всплытия фотографий при прокрутке (Intersection Observer) */
+        .reveal-card {
+            opacity: 0;
+            transform: translateY(55px) scale(0.95);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+        .reveal-card.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Стили для конверта */
+        .envelope-flap {
+            clip-path: polygon(0 0, 50% 55%, 100% 0);
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top;
+        }
+        .envelope-open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        /* Стили для фото-обоев на фоне */
+        .wallpaper-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        @media (min-width: 768px) {
+            .wallpaper-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 16px;
+            }
+        }
+
+        /* Полароид эффект */
+        .polaroid-shadow {
+            box-shadow: 0 12px 30px -8px rgba(136, 19, 55, 0.14), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+        }
+        .polaroid-shadow:hover {
+            box-shadow: 0 20px 40px -10px rgba(185, 28, 28, 0.25);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-roseaccent selection:text-white">
+
+    <!-- =====================================================================
+         ПЕРВЫЙ ЭКРАН (ПРИВЕТСТВЕННЫЙ КОНВЕРТ / ПИСЬМО)
+         ===================================================================== -->
+    <div id="intro-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#FFF5F7] via-[#FFE4E9] to-[#FFD1DC] p-4 transition-all duration-1000 ease-in-out">
+        
+        <!-- Декоративные размытые пятна на фоне экрана приветствия -->
+        <div class="absolute top-10 left-10 w-64 h-64 bg-rose-300/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-80 h-80 bg-red-400/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Карточка-конверт -->
+        <div id="envelope-wrapper" class="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-rose-200/80 overflow-hidden transition-transform duration-700">
+            
+            <!-- Верхний клапан конверта -->
+            <div class="envelope-flap absolute top-0 left-0 w-full h-36 bg-gradient-to-b from-rose-100 to-rose-200/90 z-10 border-b border-rose-300/50"></div>
+            
+            <!-- Контент внутри конверта -->
+            <div class="relative z-20 pt-24 pb-10 px-6 sm:px-10 text-center flex flex-col items-center">
+                
+                <!-- Сургучная печать с сердечком -->
+                <div class="w-20 h-20 -mt-12 mb-6 rounded-full bg-gradient-to-tr from-deepred via-crimson to-roseaccent shadow-lg shadow-red-900/30 flex items-center justify-center border-4 border-rose-100 animate-heartbeat">
+                    <svg class="w-10 h-10 text-white fill-current" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+
+                <span class="uppercase tracking-[0.25em] text-xs font-semibold text-roseaccent mb-2">
+                    Личное послание
+                </span>
+                
+                <h1 class="font-serif text-3xl sm:text-4xl font-bold text-deepred mb-3">
+                    Для самой любимой
+                </h1>
+                
+                <p class="font-handwriting text-2xl text-crimson mb-6">
+                    Маленькое письмо к нашей особенной дате...
+                </p>
+
+                <p class="text-sm text-rose-950/75 leading-relaxed mb-8 max-w-xs">
+                    Сегодня ровно полгода, как наши истории стали одной. Я подготовил для тебя кое-что особенное.
+                </p>
+
+                <!-- Кнопка открытия письма -->
+                <button id="open-letter-btn" class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-deepred via-crimson to-roseaccent text-white font-medium text-base rounded-full shadow-lg shadow-red-700/30 hover:shadow-xl hover:shadow-red-700/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer">
+                    <span>Открыть письмо</span>
+                    <svg class="w-5 h-5 transition-transform duration-300 group-hover:scale-125" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         ВТОРОЙ ЭКРАН (ОСНОВНОЙ САЙТ-БЛОГ)
+         ===================================================================== -->
+    <div id="main-site" class="relative min-h-screen opacity-0 pointer-events-none transition-opacity duration-1000">
+        
+        <!-- ФОНОВЫЕ ОБОИ ИЗ МНОЖЕСТВА ФОТОГРАФИЙ (Фиксированный коллаж с размытием) -->
+        <div class="fixed inset">
+            <!-- Сетка фоновых фото (замените src на ваши реальные фотографии) -->
+            <div class="wallpaper-grid w-full h-full opacity-25 scale-105 filter blur-[2px] saturate-75">
+                
+            </div>
+            <!-- Мягкая молочно-розовая вуаль поверх обоев, чтобы текст идеально читался -->
+            <div class="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/80 to-softpink/90 backdrop-blur-sm"></div>
+        </div>
+
+        <!-- Контейнер для летающих сердечек -->
+        <div id="hearts-container" class="fixed inset-0 pointer-events-none z-10 overflow-hidden"></div>
+
+        <!-- ВЕРХНЯЯ НАВИГАЦИЯ / ШАПКА -->
+        <header class="relative z-20 pt-6 pb-4 px-4 sm:px-8 max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2 text-deepred font-serif font-bold text-xl sm:text-2xl">
+                <span class="text-roseaccent text-2xl">♥</span>
+                <span>180+ дней счастья</span>
+            </div>
+            <button id="reopen-envelope-btn" class="text-xs sm:text-sm font-medium text-crimson hover:text-deepred bg-white/80 hover:bg-white px-4 py-2 rounded-full border border-rose-200 shadow-sm transition cursor-pointer">
+                Вернуться к конверту
+            </button>
+        </header>
+
+        <!-- ГЛАВНЫЙ БЛОК ПОЗДРАВЛЕНИЯ (HERO SECTION) -->
+        <main class="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-24">
+            
+            <section class="text-center max-w-3xl mx-auto mb-16 sm:mb-24 bg-white/85 backdrop-blur-md p-8 sm:p-14 rounded-[2.5rem] border border-rose-200/80 shadow-xl shadow-rose-900/5">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-100/80 text-crimson text-xs font-semibold uppercase tracking-widest mb-6">
+                    <span>Наша первая маленькая годовщина</span>
+                </div>
+
+                <h1 class="font-serif text-4xl sm:text-6xl font-bold text-deepred leading-tight mb-6">
+                    С шестым месяцем нас, <br>
+                    <span class="italic text-roseaccent font-normal">моя любимая!</span>
+                </h1>
+
+                <p class="text-base sm:text-lg text-rose-950/80 leading-relaxed mb-8 font-light">
+                    Полгода назад началась самая теплая и светлая глава моей жизни. Каждый день рядом с тобой наполнен смехом, нежностью и ощущением, что я наконец-то дома. Спасибо за каждую улыбку, за поддержку и за то, что делаешь меня счастливым.
+                </p>
+
+                <!-- Счетчик цифр любви -->
+                <div class="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-rose-100">
+                    <div class="p-3 rounded-2xl bg-softpink/70">
+                        <div class="font-serif text-2xl sm:text-4xl font-bold text-crimson">6</div>
+                        <div class="text-xs sm:text-sm text-rose-900/70 mt-1">Месяцев любви</div>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-softpink/70">
+                        <div class="font-serif text-2xl sm:text-4xl font-bold text-crimson">183</div>
+                        <div class="text-xs sm:text-sm text-rose-900/70 mt-1">Дня вместе</div>
+                    </div>
+                    <div class="p-3 rounded-2xl bg-softpink/70">
+                        <div class="font-serif text-2xl sm:text-4xl font-bold text-crimson">∞</div>
+                        <div class="text-xs sm:text-sm text-rose-900/70 mt-1">Причин любить</div>
+                    </div>
+                </div>
+
+                <div class="mt-10 flex flex-col items-center text-roseaccent/80 animate-bounce">
+                    <span class="text-xs uppercase tracking-widest mb-1">Листай вниз, чтобы открыть наши моменты</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                    </svg>
+                </div>
+            </section>
+
+            <!-- =================================================================
+                 ЛЕНТА-БЛОГ С ВСПЛЫВАЮЩИМИ ФОТОГРАФИЯМИ (SCROLL REVEAL)
+                 ================================================================= -->
+            <div class="space-y-20 sm:space-y-28">
+
+                <!-- ЗАПИСЬ 1 -->
+                <article class="reveal-card flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                    <!-- Рамка полароид -->
+                    <div class="w-full md:w-1/2">
+                        <div class="bg-white p-4 pb-8 rounded-2xl polaroid-shadow border border-rose-100 -rotate-2 hover:rotate-0 transition-transform duration-500">
+                            <div class="aspect-[4/5] w-full overflow-hidden rounded-xl bg-rose-50">
+                                <!-- ЗАМЕНИТЕ SRC НА ВАШЕ ФОТО -->
+                                <img src="1147784655047494500.jpg" 
+                                     onerror="this.src='https://placehold.co/600x750/FFF0F3/B91C1C?text=Добавьте+ваше+фото'"
+                                     alt="Наше начало" 
+                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                            </div>
+                            <div class="mt-4 flex items-center justify-between px-2">
+                                <span class="font-handwriting text-2xl text-deepred">С чего всё началось...</span>
+                                <span class="text-xs font-medium text-rose-400 bg-rose-50 px-3 py-1 rounded-full">Месяц 1</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Текст-воспоминание -->
+                    <div class="w-full md:w-1/2 bg-white/90 backdrop-blur-md p-7 sm:p-10 rounded-3xl border border-rose-100 shadow-lg">
+                        <span class="text-xs font-bold uppercase tracking-widest text-roseaccent">Глава первая</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-deepred mt-2 mb-4">
+                            Самое лучшее знакомство
+                        </h2>
+                        <p class="text-rose-950/80 leading-relaxed mb-4">
+                            Я до сих пор помню наши первые долгие разговоры, смущенные улыбки и то, как время рядом с тобой летело совершенно незаметно. Уже тогда я понял, что ты — особенная.
+                        </p>
+                        <p class="font-handwriting text-2xl text-crimson">
+                            «С первого взгляда и навсегда в сердце»
+                        </p>
+                    </div>
+                </article>
+
+                <!-- ЗАПИСЬ 2 (Зеркальное расположение) -->
+                <article class="reveal-card flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+                    <!-- Рамка полароид -->
+                    <div class="w-full md:w-1/2">
+                        <div class="bg-white p-4 pb-8 rounded-2xl polaroid-shadow border border-rose-100 rotate-2 hover:rotate-0 transition-transform duration-500">
+                            <div class="aspect-[4/5] w-full overflow-hidden rounded-xl bg-rose-50">
+                                <!-- ЗАМЕНИТЕ SRC НА ВАШЕ ФОТО -->
+                                <img src="☆.jpg" 
+                                     onerror="this.src='https://placehold.co/600x750/FFE4E6/881337?text=Добавьте+ваше+фото'"
+                                     alt="Наши прогулки" 
+                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                            </div>
+                            <div class="mt-4 flex items-center justify-between px-2">
+                                <span class="font-handwriting text-2xl text-deepred">Тысячи шагов рука об руку</span>
+                                <span class="text-xs font-medium text-rose-400 bg-rose-50 px-3 py-1 rounded-full">Месяц 2-3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Текст-воспоминание -->
+                    <div class="w-full md:w-1/2 bg-white/90 backdrop-blur-md p-7 sm:p-10 rounded-3xl border border-rose-100 shadow-lg">
+                        <span class="text-xs font-bold uppercase tracking-widest text-roseaccent">Глава вторая</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-deepred mt-2 mb-4">
+                            Наши уютные вечера и смех
+                        </h2>
+                        <p class="text-rose-950/80 leading-relaxed mb-4">
+                            Любое место становится волшебным, если ты держишь меня за руку. Обожаю твой искренний смех, твои глаза, когда ты чему-то радуешься, и наши маленькие общие шутки, понятные только нам двоим.
+                        </p>
+                        <p class="font-handwriting text-2xl text-crimson">
+                            «Рядом с тобой каждый день — праздник»
+                        </p>
+                    </div>
+                </article>
+
+                <!-- ГАЛЕРЕЯ ИЗ ТРЕХ ВСПЛЫВАЮЩИХ КАРТОЧЕК -->
+                <section class="pt-4">
+                    <div class="reveal-card text-center max-w-2xl mx-auto mb-12 bg-white/85 backdrop-blur-md py-6 px-8 rounded-3xl border border-rose-100">
+                        <span class="text-xs font-bold uppercase tracking-widest text-roseaccent">Моменты в кадрах</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-deepred mt-1">
+                            Любимые воспоминания
+                        </h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Карточка 1 -->
+                        <div class="reveal-card bg-white p-3.5 pb-6 rounded-2xl polaroid-shadow border border-rose-100 -rotate-1 hover:rotate-0 transition-all duration-500">
+                            <div class="aspect-square overflow-hidden rounded-xl bg-rose-50">
+                                <img src="отношения.jpg" alt="Кадр 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                            </div>
+                            <p class="font-handwriting text-2xl text-center text-deepred mt-4">Твоя невероятная улыбка</p>
+                        </div>
+
+                        <!-- Карточка 2 -->
+                        <div class="reveal-card bg-white p-3.5 pb-6 rounded-2xl polaroid-shadow border border-rose-100 rotate-1 hover:rotate-0 transition-all duration-500" style="transition-delay: 150ms;">
+                            <div class="aspect-square overflow-hidden rounded-xl bg-rose-50">
+                                <img src="marashaw.jpg" alt="Кадр 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                            </div>
+                            <p class="font-handwriting text-2xl text-center text-deepred mt-4">Самые теплые объятия</p>
+                        </div>
+
+                        <!-- Карточка 3 -->
+                        <div class="reveal-card bg-white p-3.5 pb-6 rounded-2xl polaroid-shadow border border-rose-100 -rotate-1 hover:rotate-0 transition-all duration-500 sm:col-span-2 lg:col-span-1" style="transition-delay: 300ms;">
+                            <div class="aspect-square overflow-hidden rounded-xl bg-rose-50">
+                                <img src="Uhhhhhh ummmm uhhhhhhhhh.jpg" alt="Кадр 3" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                            </div>
+                            <p class="font-handwriting text-2xl text-center text-deepred mt-4">Мы вдвоем против всего мира</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ЗАПИСЬ 3 -->
+                <article class="reveal-card flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                    <div class="w-full md:w-1/2">
+                        <div class="bg-white p-4 pb-8 rounded-2xl polaroid-shadow border border-rose-100 -rotate-1 hover:rotate-0 transition-transform duration-500">
+                            <div class="aspect-[4/3] w-full overflow-hidden rounded-xl bg-rose-50">
+                                <img src="1106759677203183179.jpg" 
+                                     onerror="this.src='https://placehold.co/800x600/FFF0F3/9F1239?text=Добавьте+ваше+фото'"
+                                     alt="6 месяцев" 
+                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                            </div>
+                            <div class="mt-4 flex items-center justify-between px-2">
+                                <span class="font-handwriting text-2xl text-deepred">Сегодня — нам 6 месяцев!</span>
+                                <span class="text-xs font-medium text-white bg-crimson px-3 py-1 rounded-full">Месяц 6 ♥</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/2 bg-white/90 backdrop-blur-md p-7 sm:p-10 rounded-3xl border border-rose-100 shadow-lg">
+                        <span class="text-xs font-bold uppercase tracking-widest text-roseaccent">Глава третья</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-deepred mt-2 mb-4">
+                            И это только самое начало
+                        </h2>
+                        <p class="text-rose-950/80 leading-relaxed mb-4">
+                            Шесть месяцев пролетели как один прекрасный миг, но впереди у нас еще тысячи рассветов, путешествий, исполненных желаний и поводов обнять друг друга еще крепче.
+                        </p>
+                        <p class="font-handwriting text-2xl text-crimson">
+                            «Я очень сильно тебя люблю!»
+                        </p>
+                    </div>
+                </article>
+
+                <!-- ЕЩЕ ОДНА ДВОЙНАЯ ФОТО-ПОЛОСА -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="reveal-card bg-white p-4 pb-6 rounded-2xl polaroid-shadow border border-rose-100 rotate-1 hover:rotate-0 transition-all duration-500">
+                        <div class="aspect-[16/10] overflow-hidden rounded-xl bg-rose-50">
+                            <img src="944418984367612869.jpg" alt="Момент 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                        </div>
+                        <p class="font-handwriting text-2xl text-center text-deepred mt-4">Счастье в мелочах</p>
+                    </div>
+                    <div class="reveal-card bg-white p-4 pb-6 rounded-2xl polaroid-shadow border border-rose-100 -rotate-1 hover:rotate-0 transition-all duration-500" style="transition-delay: 150ms;">
+                        <div class="aspect-[16/10] overflow-hidden rounded-xl bg-rose-50">
+                            <img src="1110207745638494081.jpg" alt="Момент 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                        </div>
+                        <p class="font-handwriting text-2xl text-center text-deepred mt-4">Всегда на одной волне</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ФИНАЛЬНАЯ ВАЛЕНТИНКА С ИНТЕРАКТИВНОЙ КНОПКОЙ -->
+            <footer class="reveal-card mt-24 text-center max-w-2xl mx-auto bg-gradient-to-br from-deepred via-crimson to-roseaccent text-white p-10 sm:p-14 rounded-[2.5rem] shadow-2xl shadow-red-900/30 relative overflow-hidden">
+                <div class="relative z-10">
+                    <div class="text-4xl mb-4 animate-heartbeat">❤️</div>
+                    <h2 class="font-serif text-3xl sm:text-5xl font-bold mb-4">
+                        С праздником нас, родная!
+                    </h2>
+                    <p class="text-rose-100 text-base sm:text-lg font-light leading-relaxed mb-8">
+                        Спасибо, что ты есть в моей жизни. Нажми на кнопку ниже, чтобы получить порцию моих виртуальных объятий и поцелуев!
+                    </p>
+                    <button id="love-burst-btn" class="px-8 py-4 bg-white text-crimson font-semibold rounded-full shadow-lg hover:bg-rose-50 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">
+                        Отправить сердечки ♥
+                    </button>
+                    <p id="love-message" class="mt-4 font-handwriting text-2xl text-rose-100 opacity-0 transition-opacity duration-500">
+                        Люблю тебя больше жизни! С 6 месяцами! ✨
+                    </p>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- =====================================================================
+         JAVASCRIPT ЛОГИКА (АНИМАЦИИ, ПЕРЕКЛЮЧЕНИЕ ОКОН, ВСПЛЫТИЕ ФОТО)
+         ===================================================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const introScreen = document.getElementById('intro-screen');
+            const envelopeWrapper = document.getElementById('envelope-wrapper');
+            const openLetterBtn = document.getElementById('open-letter-btn');
+            const reopenEnvelopeBtn = document.getElementById('reopen-envelope-btn');
+            const mainSite = document.getElementById('main-site');
+            const heartsContainer = document.getElementById('hearts-container');
+            const loveBurstBtn = document.getElementById('love-burst-btn');
+            const loveMessage = document.getElementById('love-message');
+
+            let heartsInterval = null;
+
+            // 1. Функция создания одного летящего сердечка на фоне
+            function createFloatingHeart(isBurst = false) {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                
+                const heartSymbols = ['❤️', '💖', '💕', '♥️', '🤍'];
+                heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                
+                // Случайная позиция по горизонтали
+                heart.style.left = Math.random() * 100 + 'vw';
+                
+                // Случайный размер
+                const size = isBurst ? (Math.random() * 22 + 16) : (Math.random() * 16 + 12);
+                heart.style.fontSize = size + 'px';
+                
+                // Скорость полета
+                const duration = isBurst ? (Math.random() * 3 + 3) : (Math.random() * 7 + 7);
+                heart.style.animationDuration = duration + 's';
+                
+                heartsContainer.appendChild(heart);
+
+                // Удаляем элемент после завершения анимации
+                setTimeout(() => {
+                    heart.remove();
+                }, duration * 1000);
+            }
+
+            // Запуск фонового потока сердечек
+            function startAmbientHearts() {
+                if (heartsInterval) clearInterval(heartsInterval);
+                heartsInterval = setInterval(() => {
+                    createFloatingHeart(false);
+                }, 700);
+            }
+
+            // 2. Открытие конверта и переход на основной сайт
+            openLetterBtn.addEventListener('click', () => {
+                // Анимируем клапан конверта
+                envelopeWrapper.classList.add('envelope-open');
+                
+                // Через небольшую паузу плавно скрываем первый экран и показываем сайт
+                setTimeout(() => {
+                    introScreen.style.opacity = '0';
+                    introScreen.style.transform = 'scale(1.08)';
+                    introScreen.style.pointerEvents = 'none';
+                    
+                    mainSite.classList.remove('opacity-0', 'pointer-events-none');
+                    mainSite.classList.add('opacity-100');
+                    
+                    // Запускаем фоновые сердечки и наблюдатель скролла
+                    startAmbientHearts();
+                    initScrollReveal();
+                }, 550);
+            });
+
+            // Кнопка возврата к конверту (если захочется пересмотреть)
+            reopenEnvelopeBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                envelopeWrapper.classList.remove('envelope-open');
+                introScreen.style.opacity = '1';
+                introScreen.style.transform = 'scale(1)';
+                introScreen.style.pointerEvents = 'auto';
+            });
+
+            // 3. Всплытие фотографий при прокрутке (Intersection Observer API)
+            function initScrollReveal() {
+                const revealElements = document.querySelectorAll('.reveal-card');
+                
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px 0px -60px 0px', // Срабатывает чуть раньше нижнего края экрана
+                    threshold: 0.12 // Появляется, когда видно 12% карточки
+                };
+
+                const revealObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            // Оставляем карточку видимой после появления
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+
+                revealElements.forEach(el => {
+                    revealObserver.observe(el);
+                });
+            }
+
+            // 4. Салют из сердечек при нажатии на финальную кнопку
+            loveBurstBtn.addEventListener('click', () => {
+                loveMessage.classList.remove('opacity-0');
+                for (let i = 0; i < 30; i++) {
+                    setTimeout(() => {
+                        createFloatingHeart(true);
+                         }, i * 60);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
